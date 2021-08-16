@@ -94,3 +94,11 @@ RUN chmod +x /init && \
        rm -rf /etc/pki/trust/anchors && \
        ln -sf /certificates /etc/pki/trust/anchors
 ENTRYPOINT ["/init"]
+
+# update puma to fix ssl error
+RUN zypper -n in --no-recommends -t pattern devel_basis && \
+       export GEM_PATH=/srv/Portus/vendor/bundle/ruby/2.6.0 GEM_HOME=/srv/Portus/vendor/bundle/ruby/2.6.0  && \
+       bundle update puma && \
+       zypper -n rm autoconf automake binutils bison cpp flex gcc gcc7 gdbm-devel gettext-tools libctf0 libtool m4 make makeinfo patterns-base-base patterns-base-basesystem \
+  patterns-devel-base-devel_basis sysconfig wicked wicked-service && \
+       zypper clean -a
